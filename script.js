@@ -1,6 +1,6 @@
 const wrapper = document.querySelector("#main-wrapper");
 const TIME_INTERVAL = 4000; // interval time
-const TRANSITION = 100; // animation transition time
+const TRANSITION = 120; // animation transition time
 const NO = 50; // no of the rows
 let counter = 0; // counter
 let currentTime = new Date(); // current time when the script load
@@ -55,7 +55,7 @@ const createElement = (id) => {
     let timer = setTimeout(() => {
         element.classList.toggle("active");
         clearTimeout(timer);
-    }, 1);
+    }, 20);
     return element;
 };
 
@@ -155,7 +155,7 @@ const displayInstruction = () => {
         }
         para.style.bottom = bottom + "px";
         bottom += 1;
-    }, 10);
+    }, 1);
 };
 
 if (confirm("Start the rating process") == true) {
