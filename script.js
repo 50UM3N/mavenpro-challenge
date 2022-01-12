@@ -1,5 +1,5 @@
 const wrapper = document.querySelector("#main-wrapper");
-const TIME_INTERVAL = 4000; // interval time
+const TIME_INTERVAL = 1000; // interval time
 const TRANSITION = 100; // animation transition time
 const NO = 50; // no of the rows
 let counter = 0; // counter
@@ -64,7 +64,10 @@ const removeElement = (element) => {
     let raters = element.querySelectorAll(".rating");
     raters[0].removeEventListener("click", giveRating);
     raters[1].removeEventListener("click", giveRating);
-    element.remove();
+    let timer = setTimeout(() => {
+        element.remove();
+        clearTimeout(timer);
+    }, 100);
 };
 
 // removing the all element at the end
@@ -108,7 +111,7 @@ const finish = () => {
 const startRating = () => {
     currentTime = new Date();
     console.time();
-    wrapper.prepend(createElement(counter * 2));
+    wrapper.append(createElement(counter * 2));
     // console.log(displayTime());
     counter++;
     let interval = setInterval(() => {
@@ -119,9 +122,9 @@ const startRating = () => {
             return;
         }
         if (wrapper.childElementCount === noOfRows) {
-            removeElement(wrapper.lastElementChild);
+            removeElement(wrapper.firstElementChild);
         }
-        wrapper.prepend(createElement(counter * 2));
+        wrapper.append(createElement(counter * 2));
         counter++;
     }, TIME_INTERVAL + TRANSITION);
 };
@@ -151,7 +154,7 @@ const displayInstruction = () => {
 };
 
 if (confirm("Start the rating process") == true) {
-    displayInstruction();
+    startRating();
 } else {
     console.log("end");
 }
