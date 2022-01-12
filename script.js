@@ -1,5 +1,5 @@
 const wrapper = document.querySelector("#main-wrapper");
-const TIME_INTERVAL = 1000; // interval time
+const TIME_INTERVAL = 4000; // interval time
 const TRANSITION = 100; // animation transition time
 const NO = 50; // no of the rows
 let counter = 0; // counter
@@ -27,22 +27,22 @@ const createElement = (id) => {
                 <p class="indicator">No: ${id + 1}</p>
                 <div class="image-wrapper">Hi ${id + 1}</div>
                 <div class="rating" data-id="${id + 1}">
-                    <i data-idx="1" class="rating__star far fa-star"></i>
-                    <i data-idx="2" class="rating__star far fa-star"></i>
-                    <i data-idx="3" class="rating__star far fa-star"></i>
-                    <i data-idx="4" class="rating__star far fa-star"></i>
-                    <i data-idx="5" class="rating__star far fa-star"></i>
+                    <i data-idx="1" class="rating__star star-regular"></i>
+                    <i data-idx="2" class="rating__star star-regular"></i>
+                    <i data-idx="3" class="rating__star star-regular"></i>
+                    <i data-idx="4" class="rating__star star-regular"></i>
+                    <i data-idx="5" class="rating__star star-regular"></i>
                 </div>
             </div>
             <div class="img-col">
                 <p class="indicator">No: ${id + 2}</p>
                 <div class="image-wrapper">Hi ${id + 2}</div>
                 <div class="rating" data-id="${id + 2}">
-                    <i data-idx="1" class="rating__star far fa-star"></i>
-                    <i data-idx="2" class="rating__star far fa-star"></i>
-                    <i data-idx="3" class="rating__star far fa-star"></i>
-                    <i data-idx="4" class="rating__star far fa-star"></i>
-                    <i data-idx="5" class="rating__star far fa-star"></i>
+                    <i data-idx="1" class="rating__star star-regular"></i>
+                    <i data-idx="2" class="rating__star star-regular"></i>
+                    <i data-idx="3" class="rating__star star-regular"></i>
+                    <i data-idx="4" class="rating__star star-regular"></i>
+                    <i data-idx="5" class="rating__star star-regular"></i>
                 </div>
             </div>
         </div>`,
@@ -60,21 +60,29 @@ const createElement = (id) => {
 };
 
 // removing the single element
-const removeElement = (element) => {
+const removeElement = (element, flag = false) => {
     let raters = element.querySelectorAll(".rating");
     raters[0].removeEventListener("click", giveRating);
     raters[1].removeEventListener("click", giveRating);
-    let timer = setTimeout(() => {
+    if (flag) {
         element.remove();
-        clearTimeout(timer);
-    }, 100);
+    } else {
+        let timer = setTimeout(() => {
+            element.classList.add("de-active");
+            clearTimeout(timer);
+            let timer1 = setTimeout(() => {
+                element.remove();
+                clearTimeout(timer1);
+            }, TRANSITION);
+        }, TRANSITION);
+    }
 };
 
 // removing the all element at the end
 const removeAllElement = () => {
     const children = [...wrapper.children];
     for (let i = 0; i < children.length; i++) {
-        removeElement(children[i]);
+        removeElement(children[i], true);
     }
 };
 
@@ -85,11 +93,11 @@ const giveRating = (e) => {
     if (e.target !== e.currentTarget) {
         let idx = Number(e.target.getAttribute("data-idx")) - 1;
         stars.forEach((star) => {
-            star.classList.remove("fas");
-            star.classList.add("far");
+            star.classList.remove("star-solid");
+            star.classList.add("star-regular");
         });
         for (let i = 0; i < stars.length; i++) {
-            stars[i].classList.add("fas");
+            stars[i].classList.add("star-solid");
             if (idx == i) break;
         }
         ratings[which] = idx + 1;
@@ -104,7 +112,6 @@ const finish = () => {
     para.innerHTML = `Thanks for giving ratings!!!`;
     wrapper.appendChild(para);
     wrapper.classList.add("game-end-wrapper");
-    console.log("clear");
 };
 
 // start
@@ -112,7 +119,6 @@ const startRating = () => {
     currentTime = new Date();
     console.time();
     wrapper.append(createElement(counter * 2));
-    // console.log(displayTime());
     counter++;
     let interval = setInterval(() => {
         if (counter == NO) {
@@ -136,25 +142,28 @@ const displayInstruction = () => {
                         Please give your 5-star rating to them <br><br>
                         Each image will wait 2 seconds for your rating`;
     wrapper.appendChild(para);
-    const offset = para.offsetHeight;
-    let cont = Math.ceil(screenHeight / offset);
-    let bottom = 8 + offset;
-    let i = 0;
+    const offsetHeight = para.offsetHeight;
+    // let cont = Math.ceil(screenHeight / offset);
+    let bottom = 8;
+    // let i = 0;
     let interval = setInterval(() => {
-        if (i == cont) {
+        if (offsetHeight + para.offsetTop == 0) {
             clearInterval(interval);
             para.remove();
             startRating();
             return;
         }
         para.style.bottom = bottom + "px";
-        bottom += offset;
-        i++;
-    }, 1000);
+        bottom += 1;
+    }, 10);
 };
 
 if (confirm("Start the rating process") == true) {
-    startRating();
+    displayInstruction();
 } else {
-    console.log("end");
+    const para = document.createElement("p");
+    para.classList.add("game-end");
+    para.innerHTML = `You cancel the game refresh to restart`;
+    wrapper.appendChild(para);
+    wrapper.classList.add("game-end-wrapper");
 }
