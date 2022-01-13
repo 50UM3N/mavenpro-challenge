@@ -7,7 +7,7 @@ let currentTime = new Date(); // current time when the script load
 let stack = [];
 let totalSpacing = 8 + 8; // padding top .5rem and bottom .5rem
 let screenHeight = wrapper.offsetHeight - totalSpacing; // later it will be change to window.innerHeight
-let colHeight = 200 + totalSpacing;
+let colHeight = 150 + totalSpacing;
 let noOfRows = Math.floor(screenHeight / colHeight);
 let ratings = {};
 
@@ -24,25 +24,23 @@ const createElement = (id) => {
     let dom = parser.parseFromString(
         `<div id="${id}" class="img-row">
             <div class="img-col">
-                <p class="indicator">No: ${id + 1}</p>
                 <div class="image-wrapper">Hi ${id + 1}</div>
                 <div class="rating" data-id="${id + 1}">
-                    <i data-idx="1" class="rating__star star-regular"></i>
-                    <i data-idx="2" class="rating__star star-regular"></i>
-                    <i data-idx="3" class="rating__star star-regular"></i>
-                    <i data-idx="4" class="rating__star star-regular"></i>
-                    <i data-idx="5" class="rating__star star-regular"></i>
+                    <i data-idx="1" class="rating__star star regular"></i>
+                    <i data-idx="2" class="rating__star star regular"></i>
+                    <i data-idx="3" class="rating__star star regular"></i>
+                    <i data-idx="4" class="rating__star star regular"></i>
+                    <i data-idx="5" class="rating__star star regular"></i>
                 </div>
             </div>
             <div class="img-col">
-                <p class="indicator">No: ${id + 2}</p>
                 <div class="image-wrapper">Hi ${id + 2}</div>
                 <div class="rating" data-id="${id + 2}">
-                    <i data-idx="1" class="rating__star star-regular"></i>
-                    <i data-idx="2" class="rating__star star-regular"></i>
-                    <i data-idx="3" class="rating__star star-regular"></i>
-                    <i data-idx="4" class="rating__star star-regular"></i>
-                    <i data-idx="5" class="rating__star star-regular"></i>
+                    <i data-idx="1" class="rating__star star regular"></i>
+                    <i data-idx="2" class="rating__star star regular"></i>
+                    <i data-idx="3" class="rating__star star regular"></i>
+                    <i data-idx="4" class="rating__star star regular"></i>
+                    <i data-idx="5" class="rating__star star regular"></i>
                 </div>
             </div>
         </div>`,
@@ -93,11 +91,11 @@ const giveRating = (e) => {
     if (e.target !== e.currentTarget) {
         let idx = Number(e.target.getAttribute("data-idx")) - 1;
         stars.forEach((star) => {
-            star.classList.remove("star-solid");
-            star.classList.add("star-regular");
+            star.classList.remove("solid");
+            star.classList.add("regular");
         });
         for (let i = 0; i < stars.length; i++) {
-            stars[i].classList.add("star-solid");
+            stars[i].classList.add("solid");
             if (idx == i) break;
         }
         ratings[which] = idx + 1;
@@ -154,12 +152,13 @@ const displayInstruction = () => {
             return;
         }
         para.style.bottom = bottom + "px";
-        bottom += 1;
-    }, 1);
+        bottom += 32;
+    }, 1000);
 };
 
 if (confirm("Start the rating process") == true) {
     displayInstruction();
+    // startRating();
 } else {
     const para = document.createElement("p");
     para.classList.add("game-end");
