@@ -145,7 +145,8 @@ const displayInstruction = () => {
     let bottom = 8;
     // let i = 0;
     let interval = setInterval(() => {
-        if (offsetHeight + para.offsetTop == 0) {
+        console.log(offsetHeight + para.offsetTop);
+        if (offsetHeight + para.offsetTop < 0) {
             clearInterval(interval);
             para.remove();
             startRating();
