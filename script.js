@@ -1,7 +1,7 @@
 const wrapper = document.querySelector("#main-wrapper");
 const TIME_INTERVAL = 4000; // interval time
 const TRANSITION = 120; // animation transition time
-const NO = 10; // no of the rows
+const NO = 75; // no of the rows
 let counter = 0; // counter
 let currentTime = new Date(); // current time when the script load
 let stack = [];
