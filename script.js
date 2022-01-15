@@ -1,13 +1,13 @@
 const wrapper = document.querySelector("#main-wrapper");
 const TIME_INTERVAL = 4000; // interval time
 const TRANSITION = 120; // animation transition time
-const NO = 50; // no of the rows
+const NO = 10; // no of the rows
 let counter = 0; // counter
 let currentTime = new Date(); // current time when the script load
 let stack = [];
 let totalSpacing = 8 + 8; // padding top .5rem and bottom .5rem
 let screenHeight = wrapper.offsetHeight - totalSpacing; // later it will be change to window.innerHeight
-let colHeight = 150 + totalSpacing;
+let colHeight = 150 + 28 + totalSpacing;
 let noOfRows = Math.floor(screenHeight / colHeight);
 let ratings = {};
 
@@ -142,8 +142,8 @@ const displayInstruction = () => {
     wrapper.appendChild(para);
     const offsetHeight = para.offsetHeight;
     // let cont = Math.ceil(screenHeight / offset);
-    let bottom = 8;
-    // let i = 0;
+    let bottom = 32;
+    let i = 0;
     let interval = setInterval(() => {
         console.log(offsetHeight + para.offsetTop);
         if (offsetHeight + para.offsetTop < 0) {
@@ -152,7 +152,7 @@ const displayInstruction = () => {
             startRating();
             return;
         }
-        para.style.bottom = bottom + "px";
+        para.style.bottom = `calc(50% + ${bottom}px )`;
         bottom += 32;
     }, 1000);
 };

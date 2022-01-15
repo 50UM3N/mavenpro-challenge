@@ -5,15 +5,13 @@
 }
 :root {
     --box-width: 200px;
-    --row-height: 150px;
+    --row-height: calc(150px + 28px);
 }
 html,
 body {
     height: 100%;
 }
-body {
-    padding: 0.5rem;
-}
+
 .container {
     position: relative;
     margin: 0px auto;
@@ -21,12 +19,12 @@ body {
     width: 100%;
     max-width: 500px;
     height: 100%;
-    border: 1px solid black;
     padding: 0.5rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     overflow: hidden;
+    padding-bottom: 0;
 }
 .img-row {
     width: 100%;
@@ -37,7 +35,7 @@ body {
     height: 0px;
     opacity: 0;
     transition: all 100ms ease-in-out;
-    margin: 0.5rem 0rem;
+    margin-bottom: 28px;
 }
 
 .img-col {
@@ -59,7 +57,7 @@ body {
     width: 100%;
     max-width: var(--box-width);
     border: 2px solid red;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
 }
 
 .active {
@@ -110,7 +108,7 @@ i.star {
 
 .start-para {
     position: absolute;
-    bottom: 0.5rem;
+    bottom: calc(50%);
     left: 0.5rem;
     transition: all 0.1s ease-in-out;
 }
