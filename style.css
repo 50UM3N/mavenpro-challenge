@@ -58,8 +58,12 @@ body {
     max-width: var(--box-width);
     border: 2px solid red;
     margin-bottom: 0.2rem;
+    /* overflow: hidden; */
 }
-
+.image-wrapper img {
+    width: 100px;
+    object-fit: contain;
+}
 .active {
     height: var(--row-height);
     opacity: 1;

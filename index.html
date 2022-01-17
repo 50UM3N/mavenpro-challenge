@@ -5,59 +5,57 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @keyframes spinner-grow {
+            0% {
+                transform: scale(0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        .spinner-grow {
+            --spinner-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            width: var(--spinner-size);
+            height: var(--spinner-size);
+            vertical-align: -0.125em;
+            background-color: currentColor;
+            border-radius: 50%;
+            opacity: 0;
+            animation: 0.75s linear infinite spinner-grow;
+        }
+
+        .spinner-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+
     <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
 
 <body>
-    <div class="container" id="main-wrapper">
-        <!-- <div id="${id}" class="img-row active">
-            <div class="img-col">
-                <div class="image-wrapper">Hi ${id + 1}</div>
-                <div class="rating" data-id="${id + 1}">
-                    <i data-idx="1" class="rating__star star regular"></i>
-                    <i data-idx="2" class="rating__star star regular"></i>
-                    <i data-idx="3" class="rating__star star regular"></i>
-                    <i data-idx="4" class="rating__star star regular"></i>
-                    <i data-idx="5" class="rating__star star regular"></i>
-                </div>
-            </div>
-            <div class="img-col">
-                <div class="image-wrapper">Hi ${id + 2}</div>
-                <div class="rating" data-id="${id + 2}">
-                    <i data-idx="1" class="rating__star star regular"></i>
-                    <i data-idx="2" class="rating__star star regular"></i>
-                    <i data-idx="3" class="rating__star star regular"></i>
-                    <i data-idx="4" class="rating__star star regular"></i>
-                    <i data-idx="5" class="rating__star star regular"></i>
-                </div>
-            </div>
+    <div class="spinner-wrapper">
+        <div class="spinner-grow" role="status">
         </div>
-        <div id="${id}" class="img-row active">
-            <div class="img-col">
-                <div class="image-wrapper">Hi ${id + 1}</div>
-                <div class="rating" data-id="${id + 1}">
-                    <i data-idx="1" class="rating__star star regular"></i>
-                    <i data-idx="2" class="rating__star star regular"></i>
-                    <i data-idx="3" class="rating__star star regular"></i>
-                    <i data-idx="4" class="rating__star star regular"></i>
-                    <i data-idx="5" class="rating__star star regular"></i>
-                </div>
-            </div>
-            <div class="img-col">
-                <div class="image-wrapper">Hi ${id + 2}</div>
-                <div class="rating" data-id="${id + 2}">
-                    <i data-idx="1" class="rating__star star regular"></i>
-                    <i data-idx="2" class="rating__star star regular"></i>
-                    <i data-idx="3" class="rating__star star regular"></i>
-                    <i data-idx="4" class="rating__star star regular"></i>
-                    <i data-idx="5" class="rating__star star regular"></i>
-                </div>
-            </div>
-        </div> -->
-
+        loading
     </div>
-    <script src="script.js"></script>
+    <div class="container" id="main-wrapper">
+    </div>
+    <script defer src="brand.js"></script>
+    <script defer src="script.js"></script>
 </body>
 
 </html>

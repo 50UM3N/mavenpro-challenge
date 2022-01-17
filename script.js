@@ -1,7 +1,7 @@
 const wrapper = document.querySelector("#main-wrapper");
 const TIME_INTERVAL = 4000; // interval time
 const TRANSITION = 120; // animation transition time
-const NO = 75; // no of the rows
+const NO = 31; // no of the rows
 let counter = 0; // counter
 let currentTime = new Date(); // current time when the script load
 let stack = [];
@@ -24,7 +24,9 @@ const createElement = (id) => {
     let dom = parser.parseFromString(
         `<div id="${id}" class="img-row">
             <div class="img-col">
-                <div class="image-wrapper">Hi ${id + 1}</div>
+                <div class="image-wrapper">
+                    <img src="brand_logos/${brand[0]}" alt="">
+                </div>
                 <div class="rating" data-id="${id + 1}">
                     <i data-idx="1" class="rating__star star regular"></i>
                     <i data-idx="2" class="rating__star star regular"></i>
@@ -34,7 +36,9 @@ const createElement = (id) => {
                 </div>
             </div>
             <div class="img-col">
-                <div class="image-wrapper">Hi ${id + 2}</div>
+                <div class="image-wrapper">
+                    <img src="brand_logos/${brand[0]}"  alt="">
+                </div>
                 <div class="rating" data-id="${id + 2}">
                     <i data-idx="1" class="rating__star star regular"></i>
                     <i data-idx="2" class="rating__star star regular"></i>
@@ -47,6 +51,9 @@ const createElement = (id) => {
         "text/html"
     );
     let element = dom.getElementById(id);
+    const images = element.querySelectorAll("img");
+    images[0].src = `brand_logos/${brand[id + 1]}`;
+    images[1].src = `brand_logos/${brand[id + 2]}`;
     let raters = element.querySelectorAll(".rating");
     raters[0].addEventListener("click", giveRating);
     raters[1].addEventListener("click", giveRating);
@@ -157,13 +164,39 @@ const displayInstruction = () => {
     }, 1000);
 };
 
-if (confirm("Start the rating process") == true) {
-    displayInstruction();
-    // startRating();
-} else {
-    const para = document.createElement("p");
-    para.classList.add("game-end");
-    para.innerHTML = `You cancel the game refresh to restart`;
-    wrapper.appendChild(para);
-    wrapper.classList.add("game-end-wrapper");
+function preloadImages(urls, allImagesLoadedCallback) {
+    var loadedCounter = 0;
+    var toBeLoadedNumber = urls.length;
+    urls.forEach(function (url) {
+        preloadImage(url, function () {
+            loadedCounter++;
+            console.log("Number of loaded images: " + loadedCounter);
+            if (loadedCounter == toBeLoadedNumber) {
+                allImagesLoadedCallback();
+            }
+        });
+    });
+    function preloadImage(url, anImageLoadedCallback) {
+        var img = new Image();
+        img.onload = anImageLoadedCallback;
+        img.src = url;
+    }
 }
+
+// Let's call it:
+preloadImages(
+    brand.map((item) => `brand_logos/${item}`),
+    () => {
+        document.querySelector(".spinner-wrapper").remove();
+        if (confirm("Start the rating process") == true) {
+            // displayInstruction();
+            startRating();
+        } else {
+            const para = document.createElement("p");
+            para.classList.add("game-end");
+            para.innerHTML = `You cancel the game refresh to restart`;
+            wrapper.appendChild(para);
+            wrapper.classList.add("game-end-wrapper");
+        }
+    }
+);
