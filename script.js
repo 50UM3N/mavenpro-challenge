@@ -9,7 +9,6 @@ let totalSpacing = 8 + 8; // padding top .5rem and bottom .5rem
 let screenHeight = wrapper.offsetHeight - totalSpacing; // later it will be change to window.innerHeight
 let colHeight = 150 + 28 + totalSpacing;
 let noOfRows = Math.floor(screenHeight / colHeight);
-let ratings = {};
 
 const displayTime = () => {
     let time = new Date();
@@ -52,8 +51,10 @@ const createElement = (id) => {
     );
     let element = dom.getElementById(id);
     const images = element.querySelectorAll("img");
-    images[0].src = `brand_logos/${brand[id + 1]}`;
-    images[1].src = `brand_logos/${brand[id + 2]}`;
+    images[0].src = imgArr[id];
+    images[1].src = imgArr[id + 1];
+    // images[0].src = `brand_logos/${brand[id]}`;
+    // images[1].src = `brand_logos/${brand[id + 1]}`;
     let raters = element.querySelectorAll(".rating");
     raters[0].addEventListener("click", giveRating);
     raters[1].addEventListener("click", giveRating);
@@ -112,9 +113,18 @@ const giveRating = (e) => {
 // close
 const finish = () => {
     removeAllElement();
-    const para = document.createElement("p");
-    para.classList.add("game-end");
-    para.innerHTML = `Thanks for giving ratings!!!`;
+    let rate = { 0: "", 1: "", 2: "", 3: "", 4: "", 5: "" };
+    for (let [key, value] of Object.entries(ratings)) {
+        key = Number(key);
+        value = Number(value);
+        rate[value] += `${brand[key].split(".")[0]}<br>`;
+    }
+    let str = "";
+    for (let [key, value] of Object.entries(rate)) {
+        str += `<p class="type-rate">Rating ${key}</p><p class="brand">${value}</p>`;
+    }
+    const para = document.createElement("div");
+    para.innerHTML = `<h4>Finish ratings!!!</h4>${str}`;
     wrapper.appendChild(para);
     wrapper.classList.add("game-end-wrapper");
 };
@@ -163,14 +173,14 @@ const displayInstruction = () => {
         bottom += 32;
     }, 1000);
 };
-
+let imgArr = [];
 function preloadImages(urls, allImagesLoadedCallback) {
     var loadedCounter = 0;
     var toBeLoadedNumber = urls.length;
     urls.forEach(function (url) {
-        preloadImage(url, function () {
+        preloadImage(url, function (img) {
+            imgArr.push(img.src);
             loadedCounter++;
-            console.log("Number of loaded images: " + loadedCounter);
             if (loadedCounter == toBeLoadedNumber) {
                 allImagesLoadedCallback();
             }
@@ -178,7 +188,7 @@ function preloadImages(urls, allImagesLoadedCallback) {
     });
     function preloadImage(url, anImageLoadedCallback) {
         var img = new Image();
-        img.onload = anImageLoadedCallback;
+        img.onload = () => anImageLoadedCallback(img);
         img.src = url;
     }
 }

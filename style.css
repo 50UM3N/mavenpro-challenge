@@ -117,14 +117,19 @@ i.star {
     transition: all 0.1s ease-in-out;
 }
 .game-end-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: block;
+    overflow: auto;
     background-color: rgb(241, 239, 239);
-    user-select: none;
-    pointer-events: none;
 }
 .game-end {
     font-size: 2rem;
     font-weight: bold;
+}
+.type-rate {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+.brand {
+    margin-left: 1rem;
+    margin-bottom: 0.5rem;
 }

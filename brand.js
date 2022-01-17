@@ -62,3 +62,6 @@ const brand = [
     "Bingo.png",
     "Lays.png",
 ];
+
+let ratings = {};
+for (i = 0; i < brand.length; i++) ratings[i] = 0;
