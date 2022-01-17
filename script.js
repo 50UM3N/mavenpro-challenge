@@ -1,5 +1,5 @@
 const wrapper = document.querySelector("#main-wrapper");
-const TIME_INTERVAL = 1000; // interval time
+const TIME_INTERVAL = 4000; // interval time
 const TRANSITION = 120; // animation transition time
 const NO = 31; // no of the rows
 let counter = 0; // counter
