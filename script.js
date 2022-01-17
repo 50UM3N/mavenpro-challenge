@@ -30,7 +30,7 @@ const createElement = (id) => {
                     .split("/")
                     .pop()
                     .split(".")[0]
-                    .replace("%20", " ")}">
+                    .replace(/%20/g, " ")}">
                     <i data-idx="1" class="rating__star star regular"></i>
                     <i data-idx="2" class="rating__star star regular"></i>
                     <i data-idx="3" class="rating__star star regular"></i>
@@ -46,7 +46,7 @@ const createElement = (id) => {
                     .split("/")
                     .pop()
                     .split(".")[0]
-                    .replace("%20", " ")}">
+                    .replace(/%20/g, " ")}">
                     <i data-idx="1" class="rating__star star regular"></i>
                     <i data-idx="2" class="rating__star star regular"></i>
                     <i data-idx="3" class="rating__star star regular"></i>
