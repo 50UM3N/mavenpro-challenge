@@ -1,5 +1,5 @@
 const wrapper = document.querySelector("#main-wrapper");
-const TIME_INTERVAL = 4000; // interval time
+const TIME_INTERVAL = 1000; // interval time
 const TRANSITION = 120; // animation transition time
 const NO = 31; // no of the rows
 let counter = 0; // counter
@@ -26,7 +26,11 @@ const createElement = (id) => {
                 <div class="image-wrapper">
                     <img src="brand_logos/${brand[0]}" alt="">
                 </div>
-                <div class="rating" data-id="${id + 1}">
+                <div class="rating" data-id="${imgArr[id]
+                    .split("/")
+                    .pop()
+                    .split(".")[0]
+                    .replace("%20", " ")}">
                     <i data-idx="1" class="rating__star star regular"></i>
                     <i data-idx="2" class="rating__star star regular"></i>
                     <i data-idx="3" class="rating__star star regular"></i>
@@ -38,7 +42,11 @@ const createElement = (id) => {
                 <div class="image-wrapper">
                     <img src="brand_logos/${brand[0]}"  alt="">
                 </div>
-                <div class="rating" data-id="${id + 2}">
+                <div class="rating" data-id="${imgArr[id + 1]
+                    .split("/")
+                    .pop()
+                    .split(".")[0]
+                    .replace("%20", " ")}">
                     <i data-idx="1" class="rating__star star regular"></i>
                     <i data-idx="2" class="rating__star star regular"></i>
                     <i data-idx="3" class="rating__star star regular"></i>
@@ -94,7 +102,7 @@ const removeAllElement = () => {
 
 // give rating function attach to the eventListener
 const giveRating = (e) => {
-    const which = Number(e.currentTarget.getAttribute("data-id"));
+    const which = e.currentTarget.getAttribute("data-id");
     const stars = [...e.currentTarget.children];
     if (e.target !== e.currentTarget) {
         let idx = Number(e.target.getAttribute("data-idx")) - 1;
@@ -115,9 +123,8 @@ const finish = () => {
     removeAllElement();
     let rate = { 0: "", 1: "", 2: "", 3: "", 4: "", 5: "" };
     for (let [key, value] of Object.entries(ratings)) {
-        key = Number(key);
         value = Number(value);
-        rate[value] += `${brand[key].split(".")[0]}<br>`;
+        rate[value] += `${key}<br>`;
     }
     let str = "";
     for (let [key, value] of Object.entries(rate)) {
@@ -199,8 +206,8 @@ preloadImages(
     () => {
         document.querySelector(".spinner-wrapper").remove();
         if (confirm("Start the rating process") == true) {
-            displayInstruction();
-            // startRating();
+            // displayInstruction();
+            startRating();
         } else {
             const para = document.createElement("p");
             para.classList.add("game-end");

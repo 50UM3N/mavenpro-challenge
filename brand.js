@@ -64,4 +64,4 @@ const brand = [
 ];
 
 let ratings = {};
-for (i = 0; i < brand.length; i++) ratings[i] = 0;
+for (i = 0; i < brand.length; i++) ratings[brand[i].split(".")[0]] = 0;
