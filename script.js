@@ -1,7 +1,10 @@
 const wrapper = document.querySelector("#main-wrapper");
-const TIME_INTERVAL = 4000; // interval time
+// main section
+let TIME_INTERVAL = 4000; // interval time
+let NO = 62; // no of the rows
+let NO_COLUMNS = 4;
+
 const TRANSITION = 120; // animation transition time
-const NO = 31; // no of the rows
 let counter = 0; // counter
 let currentTime = new Date(); // current time when the script load
 let stack = [];
@@ -9,6 +12,23 @@ let totalSpacing = 8 + 8; // padding top .5rem and bottom .5rem
 let screenHeight = wrapper.offsetHeight - totalSpacing; // later it will be change to window.innerHeight
 let colHeight = 150 + 28 + totalSpacing;
 let noOfRows = Math.floor(screenHeight / colHeight);
+
+const preprocess = () => {
+    const width = window.innerWidth;
+    if (width >= 1400) {
+        TIME_INTERVAL = 16000;
+        NO_COLUMNS = 8;
+    } else if (width >= 1024) {
+        TIME_INTERVAL = 12000;
+        NO_COLUMNS = 6;
+    } else if (width >= 768) {
+        TIME_INTERVAL = 8000;
+        NO_COLUMNS = 4;
+    } else {
+        TIME_INTERVAL = 4000;
+        NO_COLUMNS = 2;
+    }
+};
 
 const displayTime = () => {
     let time = new Date();
@@ -201,19 +221,19 @@ function preloadImages(urls, allImagesLoadedCallback) {
 }
 
 // Let's call it:
-preloadImages(
-    brand.map((item) => `brand_logos/${item}`),
-    () => {
-        document.querySelector(".spinner-wrapper").remove();
-        if (confirm("Start the rating process") == true) {
-            displayInstruction();
-            // startRating();
-        } else {
-            const para = document.createElement("p");
-            para.classList.add("game-end");
-            para.innerHTML = `You cancel the game refresh to restart`;
-            wrapper.appendChild(para);
-            wrapper.classList.add("game-end-wrapper");
-        }
-    }
-);
+// preloadImages(
+//     brand.map((item) => `brand_logos/${item}`),
+//     () => {
+//         document.querySelector(".spinner-wrapper").remove();
+//         if (confirm("Start the rating process") == true) {
+//             displayInstruction();
+//             // startRating();
+//         } else {
+//             const para = document.createElement("p");
+//             para.classList.add("game-end");
+//             para.innerHTML = `You cancel the game refresh to restart`;
+//             wrapper.appendChild(para);
+//             wrapper.classList.add("game-end-wrapper");
+//         }
+//     }
+// );
