@@ -206,8 +206,8 @@ preloadImages(
     () => {
         document.querySelector(".spinner-wrapper").remove();
         if (confirm("Start the rating process") == true) {
-            displayInstruction();
-            // startRating();
+            // displayInstruction();
+            startRating();
         } else {
             const para = document.createElement("p");
             para.classList.add("game-end");
