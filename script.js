@@ -1,7 +1,8 @@
 const wrapper = document.querySelector("#main-wrapper");
 // main section
 let TIME_INTERVAL = 4000; // interval time
-let NO = 62; // no of the rows
+const NO_IMAGES = 62;
+let NO = 5; // no of the rows
 let NO_COLUMNS = 4;
 
 const TRANSITION = 120; // animation transition time
@@ -13,22 +14,39 @@ let screenHeight = wrapper.offsetHeight - totalSpacing; // later it will be chan
 let colHeight = 150 + 28 + totalSpacing;
 let noOfRows = Math.floor(screenHeight / colHeight);
 
-const preprocess = () => {
+let imgArr = [];
+(async () => {
+    // document.body
+    //     .requestFullscreen()
+    //     .then(() => console.log("ok"))
+    //     .catch((err) => console.log(err));
+    // screen.orientation
+    //     .lock(screen.orientation.type)
+    //     .then(() => {
+    //         console.log("ok");
+    //     })
+    //     .catch((error) => {
+    //         console.log(error);
+    //     });
     const width = window.innerWidth;
     if (width >= 1400) {
         TIME_INTERVAL = 16000;
         NO_COLUMNS = 8;
+        NO = NO_IMAGES / NO_COLUMNS;
     } else if (width >= 1024) {
         TIME_INTERVAL = 12000;
         NO_COLUMNS = 6;
+        NO = NO_IMAGES / NO_COLUMNS;
     } else if (width >= 768) {
         TIME_INTERVAL = 8000;
         NO_COLUMNS = 4;
+        NO = NO_IMAGES / NO_COLUMNS;
     } else {
         TIME_INTERVAL = 4000;
         NO_COLUMNS = 2;
+        NO = NO_IMAGES / NO_COLUMNS;
     }
-};
+})();
 
 const displayTime = () => {
     let time = new Date();
@@ -37,14 +55,12 @@ const displayTime = () => {
     return t;
 };
 
-// creating the dynamic element and adding eventListener to every rating
-const createElement = (id) => {
+const createCol = (id) => {
     let parser = new DOMParser();
     let dom = parser.parseFromString(
-        `<div id="${id}" class="img-row">
-            <div class="img-col">
+        `   <div class="img-col" id="${id}">
                 <div class="image-wrapper">
-                    <img src="brand_logos/${brand[0]}" alt="">
+                    <img src="#" alt="">
                 </div>
                 <div class="rating" data-id="${imgArr[id]
                     .split("/")
@@ -57,35 +73,27 @@ const createElement = (id) => {
                     <i data-idx="4" class="rating__star star regular"></i>
                     <i data-idx="5" class="rating__star star regular"></i>
                 </div>
-            </div>
-            <div class="img-col">
-                <div class="image-wrapper">
-                    <img src="brand_logos/${brand[0]}"  alt="">
-                </div>
-                <div class="rating" data-id="${imgArr[id + 1]
-                    .split("/")
-                    .pop()
-                    .split(".")[0]
-                    .replace("%20", " ")}">
-                    <i data-idx="1" class="rating__star star regular"></i>
-                    <i data-idx="2" class="rating__star star regular"></i>
-                    <i data-idx="3" class="rating__star star regular"></i>
-                    <i data-idx="4" class="rating__star star regular"></i>
-                    <i data-idx="5" class="rating__star star regular"></i>
-                </div>
-            </div>
-        </div>`,
+            </div>`,
         "text/html"
     );
     let element = dom.getElementById(id);
-    const images = element.querySelectorAll("img");
-    images[0].src = imgArr[id];
-    images[1].src = imgArr[id + 1];
-    // images[0].src = `brand_logos/${brand[id]}`;
-    // images[1].src = `brand_logos/${brand[id + 1]}`;
-    let raters = element.querySelectorAll(".rating");
-    raters[0].addEventListener("click", giveRating);
-    raters[1].addEventListener("click", giveRating);
+    const image = element.querySelector("img");
+    image.src = imgArr[id];
+    let rater = element.querySelector(".rating");
+    rater.addEventListener("click", giveRating);
+    return element;
+};
+
+// creating the dynamic element and adding eventListener to every rating
+const createElement = (id) => {
+    const element = document.createElement("div");
+    element.id = id;
+    element.classList.add("img-row");
+    for (let i = 0; i < NO_COLUMNS; i++) {
+        if (id + i == NO_IMAGES) break;
+        let col = createCol(id + i);
+        element.appendChild(col);
+    }
     let timer = setTimeout(() => {
         element.classList.toggle("active");
         clearTimeout(timer);
@@ -96,8 +104,9 @@ const createElement = (id) => {
 // removing the single element
 const removeElement = (element, flag = false) => {
     let raters = element.querySelectorAll(".rating");
-    raters[0].removeEventListener("click", giveRating);
-    raters[1].removeEventListener("click", giveRating);
+    raters.forEach((rater) => {
+        rater.removeEventListener("click", giveRating);
+    });
     if (flag) {
         element.remove();
     } else {
@@ -160,10 +169,13 @@ const finish = () => {
 const startRating = () => {
     currentTime = new Date();
     console.time();
-    wrapper.append(createElement(counter * 2));
+    wrapper.append(createElement(counter * NO_COLUMNS));
     counter++;
+    console.time("interval");
     let interval = setInterval(() => {
-        if (counter == NO) {
+        console.timeEnd("interval");
+        console.time("interval");
+        if (counter >= NO) {
             console.timeEnd();
             clearInterval(interval);
             finish();
@@ -172,7 +184,7 @@ const startRating = () => {
         if (wrapper.childElementCount === noOfRows) {
             removeElement(wrapper.firstElementChild);
         }
-        wrapper.append(createElement(counter * 2));
+        wrapper.append(createElement(counter * NO_COLUMNS));
         counter++;
     }, TIME_INTERVAL + TRANSITION);
 };
@@ -200,7 +212,7 @@ const displayInstruction = () => {
         bottom += 32;
     }, 1000);
 };
-let imgArr = [];
+
 function preloadImages(urls, allImagesLoadedCallback) {
     var loadedCounter = 0;
     var toBeLoadedNumber = urls.length;
@@ -221,19 +233,19 @@ function preloadImages(urls, allImagesLoadedCallback) {
 }
 
 // Let's call it:
-// preloadImages(
-//     brand.map((item) => `brand_logos/${item}`),
-//     () => {
-//         document.querySelector(".spinner-wrapper").remove();
-//         if (confirm("Start the rating process") == true) {
-//             displayInstruction();
-//             // startRating();
-//         } else {
-//             const para = document.createElement("p");
-//             para.classList.add("game-end");
-//             para.innerHTML = `You cancel the game refresh to restart`;
-//             wrapper.appendChild(para);
-//             wrapper.classList.add("game-end-wrapper");
-//         }
-//     }
-// );
+preloadImages(
+    brand.map((item) => `brand_logos/${item}`),
+    () => {
+        document.querySelector(".spinner-wrapper").remove();
+        if (confirm("Start the rating process") == true) {
+            // displayInstruction();
+            startRating();
+        } else {
+            const para = document.createElement("p");
+            para.classList.add("game-end");
+            para.innerHTML = `You cancel the game refresh to restart`;
+            wrapper.appendChild(para);
+            wrapper.classList.add("game-end-wrapper");
+        }
+    }
+);
