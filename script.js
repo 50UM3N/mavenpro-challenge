@@ -144,6 +144,7 @@ const giveRating = (e) => {
             if (idx == i) break;
         }
         ratings[which] = idx + 1;
+        window.localStorage.setItem("ratings", JSON.stringify(ratings));
     }
 };
 
@@ -173,9 +174,12 @@ const startRating = () => {
     counter++;
     console.time("interval");
     let interval = setInterval(() => {
+        window.localStorage.setItem("counter", counter);
         console.timeEnd("interval");
         console.time("interval");
         if (counter >= NO) {
+            window.localStorage.removeItem("counter");
+            window.localStorage.removeItem("ratings");
             console.timeEnd();
             clearInterval(interval);
             finish();
@@ -189,10 +193,25 @@ const startRating = () => {
     }, TIME_INTERVAL + TRANSITION);
 };
 
+const checkPrevious = () => {
+    let localCounter = window.localStorage.getItem("counter");
+    let localRatings = JSON.parse(window.localStorage.getItem("ratings"));
+    if (localCounter === null && localRatings === null) return true;
+    counter = Number(localCounter);
+    ratings = localRatings;
+    return false;
+};
+
 const displayInstruction = () => {
     const para = document.createElement("p");
     para.classList.add("start-para");
-    para.innerHTML = `You will see images coming up now .... <br><br>
+    let flag = checkPrevious();
+    if (flag)
+        para.innerHTML = `You will see images coming up now .... <br><br>
+                        Please give your 5-star rating to them <br><br>
+                        Each image will wait 2 seconds for your rating`;
+    else
+        para.innerHTML = `Your previous rating session was not complete<br><br>Starting from where left<br><br>
                         Please give your 5-star rating to them <br><br>
                         Each image will wait 2 seconds for your rating`;
     wrapper.appendChild(para);
@@ -216,9 +235,10 @@ const displayInstruction = () => {
 function preloadImages(urls, allImagesLoadedCallback) {
     var loadedCounter = 0;
     var toBeLoadedNumber = urls.length;
-    urls.forEach(function (url) {
+    urls.forEach(function (data) {
+        let [index, url] = data.split("|");
         preloadImage(url, function (img) {
-            imgArr.push(img.src);
+            imgArr[Number(index)] = img.src;
             loadedCounter++;
             if (loadedCounter == toBeLoadedNumber) {
                 allImagesLoadedCallback();
@@ -234,12 +254,12 @@ function preloadImages(urls, allImagesLoadedCallback) {
 
 // Let's call it:
 preloadImages(
-    brand.map((item) => `brand_logos/${item}`),
+    brand.map((item, index) => `${index}|brand_logos/${item}`),
     () => {
         document.querySelector(".spinner-wrapper").remove();
         if (confirm("Start the rating process") == true) {
-            // displayInstruction();
-            startRating();
+            displayInstruction();
+            // startRating();
         } else {
             const para = document.createElement("p");
             para.classList.add("game-end");
