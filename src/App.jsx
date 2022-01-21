@@ -1,90 +1,63 @@
 import React, { useEffect, useState } from "react";
 import "./scss/Rating.scss";
-import BRANDS from "./data/brand.json";
 import Loader from "./Components/Loader";
-
+import useRatingInit from "./Hooks/useRatingInit";
 export default function App() {
-    const [loading, setLoading] = useState(true);
-    const [ratings, setRatings] = useState({});
-    const [options, setOptions] = useState({});
-    const [imageURL, setImageURL] = useState([]);
+    const [loading, ratings, options, imageURL] = useRatingInit();
+    const [imageRow, setImageRow] = useState([]);
     console.log({ ratings, options, imageURL });
+    console.log(imageRow);
+    let imageRowLength = 0;
     useEffect(() => {
-        let localOptions = {
-            timeInterval: 0,
-            noOfImages: 0,
-            noOfColumns: 0,
-            counter: 0,
-            number: 0,
-        };
-        let localImageURL = [];
-        const preloadImages = (urls, allImagesLoadedCallback) => {
-            var loadedCounter = 0;
-            var toBeLoadedNumber = urls.length;
-            urls.forEach(function (data) {
-                let [index, url] = data.split("|");
-                preloadImage(url, function (img) {
-                    localImageURL[Number(index)] = img.src;
-                    loadedCounter++;
-                    if (loadedCounter == toBeLoadedNumber) {
-                        allImagesLoadedCallback();
-                    }
+        if (loading) return;
+        let counter = options.counter;
+        setImageRow((state) => {
+            let index = 0 * options.noOfColumns;
+            let sample = [...state];
+            let column = [];
+            for (let i = 0; i < options.noOfColumns; i++) {
+                if (index + i == options.noOfImages) break;
+                column[i] = imageURL[index + i];
+            }
+            console.log(column);
+            sample.push([...column]);
+            return [...sample];
+        });
+        counter++;
+        imageRowLength++;
+        let interval = setInterval(() => {
+            if (counter >= options.number) {
+                // window.localStorage.removeItem("counter");
+                // window.localStorage.removeItem("ratings");
+                clearInterval(interval);
+                return;
+            }
+            console.log(imageRow.length);
+            if (imageRowLength === options.noOfRows) {
+                setImageRow((state) => {
+                    let sample = state.filter((_, index) => index !== 0);
+                    return [...sample];
                 });
+                imageRowLength--;
+            }
+            setImageRow((state) => {
+                let index = counter * options.noOfColumns;
+                let sample = [...state];
+                let column = [];
+                for (let i = 0; i < options.noOfColumns; i++) {
+                    if (index + i == options.noOfImages) break;
+                    column.push(imageURL[index + i]);
+                }
+                sample.push([...column]);
+                return [...sample];
             });
-            function preloadImage(url, anImageLoadedCallback) {
-                var img = new Image();
-                img.onload = () => anImageLoadedCallback(img);
-                img.src = url;
-            }
+            counter++;
+            imageRowLength++;
+        }, options.timeInterval + options.transitionTime);
+        return () => {
+            clearInterval(interval);
         };
-        // setting up local storage
-        let localCounter = window.localStorage.getItem("counter");
-        let localRatings = JSON.parse(window.localStorage.getItem("ratings"));
-        if (localCounter === null && localRatings === null) {
-            let _ratings = {};
-            for (let i = 0; i < BRANDS.length; i++)
-                _ratings[BRANDS[i].split(".")[0]] = 0;
-            localOptions.noOfImages = BRANDS.length;
-            setRatings({ ..._ratings });
-        } else {
-            localOptions.noOfImages = Object.keys(localRatings).length;
-            localOptions.counter = Number(localCounter);
-            setRatings({ ...localRatings });
-        }
-        // setting up responsiveness
-        const windowWidth = window.innerWidth;
-        if (windowWidth >= 1400) {
-            localOptions.timeInterval = 16000;
-            localOptions.noOfColumns = 8;
-            localOptions.number =
-                localOptions.noOfImages / localOptions.noOfColumns;
-        } else if (windowWidth >= 1024) {
-            localOptions.timeInterval = 12000;
-            localOptions.noOfColumns = 6;
-            localOptions.number =
-                localOptions.noOfImages / localOptions.noOfColumns;
-        } else if (windowWidth >= 768) {
-            localOptions.timeInterval = 8000;
-            localOptions.noOfColumns = 4;
-            localOptions.number =
-                localOptions.noOfImages / localOptions.noOfColumns;
-        } else {
-            localOptions.timeInterval = 4000;
-            localOptions.noOfColumns = 2;
-            localOptions.number =
-                localOptions.noOfImages / localOptions.noOfColumns;
-        }
-        // image loading
-        preloadImages(
-            BRANDS.map((item, index) => `${index}|brand_logos/${item}`),
-            () => {
-                setImageURL(localImageURL);
-                setOptions({ ...localOptions });
-                setLoading(false);
-            }
-        );
-        return () => {};
-    }, []);
+    }, [loading]);
     return (
         <>
             {loading ? (
