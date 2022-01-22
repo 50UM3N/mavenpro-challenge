@@ -4,7 +4,7 @@ const RatingCardRow = ({ imageColumn }) => {
     return (
         <div className="img-row active">
             {imageColumn.map((item) => (
-                <RatingCard key={Math.random()} image={item} />
+                <RatingCard key={item.id} image={item.url} />
             ))}
         </div>
     );

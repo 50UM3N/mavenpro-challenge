@@ -18,7 +18,7 @@ export default function App() {
             let column = [];
             for (let i = 0; i < options.noOfColumns; i++) {
                 if (index + i == options.noOfImages) break;
-                column[i] = imageURL[index + i];
+                column[i] = { id: Math.random(), url: imageURL[index + i] };
             }
             sample.push({ id: Math.random(), data: [...column] });
             return [...sample];
@@ -45,7 +45,7 @@ export default function App() {
                 let column = [];
                 for (let i = 0; i < options.noOfColumns; i++) {
                     if (index + i == options.noOfImages) break;
-                    column.push(imageURL[index + i]);
+                    column[i] = { id: Math.random(), url: imageURL[index + i] };
                 }
                 sample.push({ id: Math.random(), data: [...column] });
                 return [...sample];
