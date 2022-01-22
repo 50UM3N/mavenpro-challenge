@@ -64,7 +64,7 @@ const useRatingInit = () => {
             localOptions.number =
                 localOptions.noOfImages / localOptions.noOfColumns;
         } else if (windowWidth >= 1024) {
-            localOptions.timeInterval = 1000;
+            localOptions.timeInterval = 4000;
             localOptions.noOfColumns = 6;
             localOptions.number =
                 localOptions.noOfImages / localOptions.noOfColumns;
