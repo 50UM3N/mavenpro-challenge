@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import "./scss/Rating.scss";
 import Loader from "./Components/Loader";
 import useRatingInit from "./Hooks/useRatingInit";
 import RatingCardRow from "./Components/Rating/RatingCardRow";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 export default function App() {
-    const nodeRef = useRef(null);
+    // const nodeRef = useRef(null);
     const [loading, ratings, options, imageURL] = useRatingInit();
     const [imageRow, setImageRow] = useState([]);
     console.log({ ratings, options, imageURL });
@@ -67,15 +67,11 @@ export default function App() {
                 <TransitionGroup className="rating-container">
                     {imageRow.map((item) => (
                         <CSSTransition
-                            nodeRef={nodeRef}
-                            in
                             key={item.id}
                             timeout={options.transitionTime}
                             classNames="item"
                         >
-                            <div className="img-row" ref={nodeRef}>
-                                <RatingCardRow imageColumn={item.data} />
-                            </div>
+                            <RatingCardRow imageColumn={item.data} />
                         </CSSTransition>
                     ))}
                 </TransitionGroup>
