@@ -39,7 +39,9 @@ const useRatingInit = () => {
         // setting up local storage
         let localCounter = window.localStorage.getItem("counter");
         let localRatings = JSON.parse(window.localStorage.getItem("ratings"));
-        if (localCounter === null && localRatings === null) {
+        if (localCounter !== null) localOptions.counter = Number(localCounter);
+
+        if (localRatings === null) {
             let _ratings = {};
             for (let i = 0; i < BRANDS.length; i++)
                 _ratings[BRANDS[i].split(".")[0]] = 0;
@@ -47,7 +49,6 @@ const useRatingInit = () => {
             setRatings({ ..._ratings });
         } else {
             localOptions.noOfImages = Object.keys(localRatings).length;
-            localOptions.counter = Number(localCounter);
             setRatings({ ...localRatings });
         }
         // setting up responsiveness
@@ -64,7 +65,7 @@ const useRatingInit = () => {
             localOptions.number =
                 localOptions.noOfImages / localOptions.noOfColumns;
         } else if (windowWidth >= 1024) {
-            localOptions.timeInterval = 4000;
+            localOptions.timeInterval = 12000;
             localOptions.noOfColumns = 6;
             localOptions.number =
                 localOptions.noOfImages / localOptions.noOfColumns;
@@ -90,7 +91,7 @@ const useRatingInit = () => {
         );
     }, []);
 
-    return [loading, ratings, options, imageURL];
+    return [loading, { ratings, setRatings }, options, imageURL];
 };
 
 export default useRatingInit;
