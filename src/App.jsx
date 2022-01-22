@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./scss/Rating.scss";
 import Loader from "./Components/Loader";
 import useRatingInit from "./Hooks/useRatingInit";
+import RatingCardRow from "./Components/Rating/RatingCardRow";
 export default function App() {
     const [loading, ratings, options, imageURL] = useRatingInit();
     const [imageRow, setImageRow] = useState([]);
@@ -19,8 +20,7 @@ export default function App() {
                 if (index + i == options.noOfImages) break;
                 column[i] = imageURL[index + i];
             }
-            console.log(column);
-            sample.push([...column]);
+            sample.push({ id: Math.random(), data: [...column] });
             return [...sample];
         });
         counter++;
@@ -32,7 +32,6 @@ export default function App() {
                 clearInterval(interval);
                 return;
             }
-            console.log(imageRow.length);
             if (imageRowLength === options.noOfRows) {
                 setImageRow((state) => {
                     let sample = state.filter((_, index) => index !== 0);
@@ -48,7 +47,7 @@ export default function App() {
                     if (index + i == options.noOfImages) break;
                     column.push(imageURL[index + i]);
                 }
-                sample.push([...column]);
+                sample.push({ id: Math.random(), data: [...column] });
                 return [...sample];
             });
             counter++;
@@ -63,7 +62,11 @@ export default function App() {
             {loading ? (
                 <Loader />
             ) : (
-                <div className="container" id="main-wrapper"></div>
+                <div className="container" id="main-wrapper">
+                    {imageRow.map((item) => (
+                        <RatingCardRow key={item.id} imageColumn={item.data} />
+                    ))}
+                </div>
             )}
         </>
     );

@@ -1,8 +1,9 @@
-const RatingCard = () => {
+import React from "react";
+const RatingCard = ({ image }) => {
     return (
         <div className="img-col">
             <div className="image-wrapper">
-                <img src="brand_logos/7 Up.png" alt="" />
+                <img src={image} alt="Brand Logo" />
             </div>
             <div className="rating">
                 <i data-idx="1" className="rating__star star regular"></i>
